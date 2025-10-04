@@ -1,0 +1,521 @@
+/* Beezi - Sistema Satelital para Protección de Polinizadores */
+
+.beezi-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+}
+
+/* Header con branding */
+// Header profesional, más alto y con sombra elegante
+.beezi-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  background: linear-gradient(90deg, #232a4d 0%, #2e7d32 100%);
+  backdrop-filter: blur(12px);
+  padding: 32px 48px 24px 48px;
+  min-height: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.25);
+  border-bottom: 2px solid #00d4ff33;
+}
+
+  .city-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 24px;
+    input[type="text"] {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid #00d4ff;
+      background: #fff;
+      color: #222;
+      font-size: 1rem;
+      min-width: 180px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    button {
+      background: linear-gradient(90deg,#00d4ff,#00ff88);
+      border: none;
+      border-radius: 8px;
+      color: #222;
+      font-weight: bold;
+      padding: 7px 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    button:hover { filter: brightness(1.1); }
+  }
+
+  .logo-section {
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tagline {
+      margin: 0;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 300;
+    }
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 600;
+
+    .pulse-dot {
+      width: 12px;
+      height: 12px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+    }
+  }
+
+/* Mapa principal */
+// El mapa ahora respeta el header fijo y tiene más margen
+.main-map {
+  position: absolute;
+  top: 110px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 28px 28px 0 0;
+  overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+  margin: 0 auto;
+// (Eliminada llave de cierre extra)
+}
+
+/* Panel de información flotante */
+// Panel info tipo card profesional
+.info-panel {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  width: 350px;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.22);
+  border: 1.5px solid #e0e0e0;
+  z-index: 1200;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-bottom: 8px;
+}
+
+  /* .collapsed debe ir anidado dentro de .info-panel, no a nivel raíz */
+
+  .panel-header {
+    padding: 18px 28px 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1.5px solid #e0e0e0;
+
+    h3 {
+      margin: 0;
+      color: #2E7D32;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #2E7D32;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .panel-content {
+    padding: 24px 28px 8px 28px;
+  }
+
+  .metric-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #f4f7fa 0%, #e3eaf1 100%);
+    border-radius: 16px;
+    border-left: 5px solid #00d4ff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    &.warning {
+      border-left-color: #FF5722;
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      box-shadow: 0 2px 12px rgba(255,87,34,0.08);
+    }
+
+    .metric-icon {
+      font-size: 2.2rem;
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.92);
+      border-radius: 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .metric-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #2E7D32;
+  line-height: 1.1;
+      }
+
+      .metric-label {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+      }
+    }
+  }
+
+  .predictions-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    h4 {
+      margin: 0 0 15px 0;
+      color: #2E7D32;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .prediction-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(76, 175, 80, 0.2);
+      }
+
+      &.warning {
+        background: rgba(255, 87, 34, 0.1);
+        color: #d84315;
+
+        &:hover {
+          background: rgba(255, 87, 34, 0.2);
+        }
+      }
+
+      .prediction-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
+// (Eliminada llave de cierre extra)
+
+/* Controles flotantes */
+// Controles flotantes más visibles y separados
+.floating-controls {
+  position: absolute;
+  top: 130px;
+  right: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 1300;
+
+  .control-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 22px;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(12px);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+  border: 1.5px solid #e0e0e0;
+    min-width: 160px;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+    }
+
+    &.emergency {
+      background: linear-gradient(135deg, #FF5722 0%, #e64a19 100%);
+      color: white;
+
+      &:hover {
+        background: linear-gradient(135deg, #d84315 0%, #bf360c 100%);
+      }
+    }
+
+    .btn-icon {
+      font-size: 1.2rem;
+    }
+
+    .btn-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* Leyenda */
+// Leyenda más elegante
+.legend {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(18px);
+  padding: 28px 24px;
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+  border: 1.5px solid #e0e0e0;
+  z-index: 1100;
+  min-width: 240px;
+
+  h4 {
+    margin: 0 0 15px 0;
+    color: #2E7D32;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #333;
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+      &.high-bloom {
+        background: linear-gradient(135deg, #FF1744 0%, #d32f2f 100%);
+      }
+
+      &.medium-bloom {
+        background: linear-gradient(135deg, #FF6B35 0%, #f57c00 100%);
+      }
+
+      &.low-bloom {
+        background: linear-gradient(135deg, #FFE135 0%, #fdd835 100%);
+      }
+    }
+
+    .legend-line {
+      width: 30px;
+      height: 4px;
+      background: #4CAF50;
+      border-radius: 2px;
+      position: relative;
+
+      &.pollinator-route {
+        background: repeating-linear-gradient(
+          90deg,
+          #4CAF50 0px,
+          #4CAF50 6px,
+          transparent 6px,
+          transparent 12px
+        );
+      }
+    }
+  }
+}
+
+/* Overlay de carga */
+// Overlay de carga más profesional
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(26, 35, 126, 0.97) 0%, rgba(40, 53, 147, 0.97) 100%);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .loading-content {
+    text-align: center;
+    color: white;
+
+    .bee-animation {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 2rem;
+      font-weight: 300;
+    }
+
+    p {
+      margin: 0 0 30px 0;
+      opacity: 0.8;
+      font-size: 1.1rem;
+    }
+
+    .progress-bar {
+      width: 300px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 0 auto;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+        transition: width 0.3s ease;
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+/* Marcadores personalizados */
+.bee-marker {
+  animation: bounce 2s infinite;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .beezi-header {
+    padding: 10px 15px;
+
+    .logo-section h1 {
+      font-size: 1.6rem;
+    }
+  }
+
+  .info-panel {
+    width: calc(100% - 40px);
+    left: 20px;
+    right: 20px;
+  }
+
+  .floating-controls {
+    top: 90px;
+    right: 10px;
+
+    .control-btn {
+      min-width: 120px;
+      padding: 10px 12px;
+    }
+  }
+
+  .legend {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
+}

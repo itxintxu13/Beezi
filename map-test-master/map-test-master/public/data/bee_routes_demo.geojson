@@ -1,0 +1,7 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type": "Feature", "properties": {"bee_id": 1, "date": "2025-04-01"}, "geometry": {"type": "LineString", "coordinates": [[-3.7038,40.4168],[-3.704,40.4175],[-3.705,40.418]]}},
+    {"type": "Feature", "properties": {"bee_id": 2, "date": "2025-05-01"}, "geometry": {"type": "LineString", "coordinates": [[-3.703,40.417],[-3.704,40.418],[-3.705,40.419]]}}
+  ]
+}
