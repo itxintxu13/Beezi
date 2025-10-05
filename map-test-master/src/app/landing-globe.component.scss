@@ -1,4 +1,4 @@
-.bee-pulse {
+.landing-ecosystem-floating-panel {
   animation: beePulse 0.7s cubic-bezier(.4,1.6,.6,1) 1;
 }
 
@@ -10,32 +10,31 @@
   100% { transform: scale(1) rotate(0deg); }
 }
 // REMOVED: Unified in app.unified-map.ts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-
-.unified-map-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  background: black;
+.landing-ecosystem-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  cursor: grab;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
-
-.mapbox-map {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.landing-globe-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background: radial-gradient(ellipse at 60% 40%, #1a1a2e 0%, #16213e 60%, #0a102a 100%);
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-}
+.landing-ecosystem-panel-title { font-weight: 700; color: #e6ffff; }
+.landing-ecosystem-panel-controls { display: flex; gap: 8px; }
+.landing-ecosystem-panel-controls .ux-btn { background: transparent; border: none; color: #dff; padding: 6px; border-radius: 8px; cursor: pointer; }
+.landing-ecosystem-panel-content { padding: 12px; }
+.landing-ecosystem-metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.landing-ecosystem-metric-card { display:flex; gap:10px; align-items:center; background: rgba(255,255,255,0.02); padding:10px; border-radius:8px; }
+.landing-ecosystem-metric-icon { font-size:1.6rem }
+.landing-ecosystem-metric-info { color:#eafcff }
+.landing-ecosystem-metric-value { display:block; font-weight:800; font-size:1.1rem }
+.landing-ecosystem-metric-label { display:block; font-size:0.85rem; opacity:0.9 }
+.landing-ecosystem-metric-trend.positive { color: #7fffd4; font-weight:700 }
+.landing-ecosystem-metric-trend.negative { color: #ffb3b3; font-weight:700 }
+.landing-ecosystem-predictions-section { margin-top:10px; color:#e6ffff }
+.landing-ecosystem-prediction-item { display:flex; gap:8px; padding:8px 6px; border-radius:6px; }
+.landing-ecosystem-prediction-item.priority-high { background: rgba(0,255,200,0.04) }
+.landing-ecosystem-prediction-item.priority-medium { background: rgba(255,215,90,0.02) }
+.landing-ecosystem-prediction-item.priority-low { background: rgba(255,80,80,0.02) }
 
 .landing-search-panel {
   position: absolute;
@@ -398,6 +397,8 @@
       position: relative;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     }
+
+/* (Landing ecosystem panel styles intentionally moved to unique selectors) */
 
     .top-controls {
       position: absolute;

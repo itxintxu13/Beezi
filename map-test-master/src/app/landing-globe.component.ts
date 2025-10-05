@@ -32,7 +32,7 @@ export class LandingGlobeComponent implements AfterViewInit {
   constructor(private readonly router: Router) {}
 
   ngAfterViewInit(): void {
-    (mapboxgl as any).accessToken = 'pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q';
+  (mapboxgl as any).accessToken = window.__env__?.MAPBOX_TOKEN || '';
     this.map = new mapboxgl.Map({
       container: this.globeMap.nativeElement,
       style: 'mapbox://styles/mapbox/satellite-v9',
@@ -64,7 +64,8 @@ export class LandingGlobeComponent implements AfterViewInit {
     const region = this.query.trim();
     let coords: [number, number] = [0, 20];
     try {
-      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q`);
+  const token = window.__env__?.MAPBOX_TOKEN || '';
+  const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=${encodeURIComponent(token)}`);
       const data = await resp.json();
       if (data.features && data.features.length > 0) {
         coords = data.features[0].center;

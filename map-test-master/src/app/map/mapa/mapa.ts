@@ -108,7 +108,7 @@ export class Mapa implements AfterViewInit {
   }
 
   private initializeMap(): void {
-    (mapboxgl as any).accessToken = 'pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q';
+  (mapboxgl as any).accessToken = window.__env__?.MAPBOX_TOKEN || '';
 
     // Space entry effect: starts very far and with rotation
     this.map = new mapboxgl.Map({
@@ -932,7 +932,7 @@ export class Mapa implements AfterViewInit {
   async flyToRegion(name: string) {
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(name)}.json?access_token=pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q`
+  (() => { const t = window.__env__?.MAPBOX_TOKEN || ''; return `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(name)}.json?access_token=${encodeURIComponent(t)}`; })()
       );
       const data = await response.json();
 

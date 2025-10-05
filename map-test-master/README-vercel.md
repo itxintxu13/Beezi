@@ -20,6 +20,13 @@ Pasos para desplegar este proyecto Angular en Vercel tal y como está:
   vercel
 - Vercel detectará el proyecto y preguntará (puedes aceptar las opciones por defecto). La build ejecutará `npm run build`.
 
+6) Uso de .env y variables locales
+- Puedes crear un archivo `.env` local (no se debe commitear). Hay un `.env.example` en la raíz con las claves necesarias.
+- Para traer las variables definidas en Vercel a tu entorno local ejecuta:
+  vercel env pull .env.local
+  Esto creará un `.env.local` con las variables para el entorno de Preview/Production según el proyecto conectado.
+- Durante desarrollo local puedes usar las variables del `.env` o cargar `.env.local` con herramientas como `dotenv` si tu flujo lo necesita.
+
 5) Notas
 - SPA: el `vercel.json` incluye una regla de `routes` que redirige todo a `index.html`. Si necesitas rutas API o un backend, añade funciones en `api/`.
 - Build: si la app falla por variables (p. ej. tokens), añade las variables en Settings > Environment Variables en Vercel antes del deploy.

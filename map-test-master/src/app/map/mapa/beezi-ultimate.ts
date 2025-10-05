@@ -850,7 +850,8 @@ export class BeeziUltimateComponent implements OnInit, AfterViewInit, OnDestroy 
   async geocodeAndInitMap(region: string) {
     // Usar Mapbox Geocoding API para obtener coordenadas
     try {
-      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q`);
+  const token = window.__env__?.MAPBOX_TOKEN || '';
+  const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=${encodeURIComponent(token)}`);
       const data = await resp.json();
       if (data.features && data.features.length > 0) {
         const [lng, lat] = data.features[0].center;
@@ -872,7 +873,7 @@ export class BeeziUltimateComponent implements OnInit, AfterViewInit, OnDestroy 
     // Inicializar globo 3D si estamos en modo espacio
     setTimeout(() => {
       if (this.viewMode === 'space' && this.spaceGlobeMap && !this.spaceGlobe) {
-  (mapboxgl as any).accessToken = 'pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q';
+  (mapboxgl as any).accessToken = window.__env__?.MAPBOX_TOKEN || '';
         this.spaceGlobe = new mapboxgl.Map({
           container: this.spaceGlobeMap.nativeElement,
           style: 'mapbox://styles/mapbox/satellite-v9',
@@ -908,7 +909,8 @@ export class BeeziUltimateComponent implements OnInit, AfterViewInit, OnDestroy 
     const region = this.searchQuery.trim();
     let coords: [number, number] = [0, 20];
     try {
-      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q`);
+  const token = window.__env__?.MAPBOX_TOKEN || '';
+  const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=${encodeURIComponent(token)}`);
       const data = await resp.json();
       if (data.features && data.features.length > 0) {
         coords = data.features[0].center;
@@ -980,7 +982,7 @@ export class BeeziUltimateComponent implements OnInit, AfterViewInit, OnDestroy 
       // Inicializar el globo de nuevo
       setTimeout(() => {
         if (this.spaceGlobeMap && !this.spaceGlobe) {
-          (mapboxgl as any).accessToken = 'pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q';
+          (mapboxgl as any).accessToken = window.__env__?.MAPBOX_TOKEN || '';
           this.spaceGlobe = new mapboxgl.Map({
             container: this.spaceGlobeMap.nativeElement,
             style: 'mapbox://styles/mapbox/satellite-v9',

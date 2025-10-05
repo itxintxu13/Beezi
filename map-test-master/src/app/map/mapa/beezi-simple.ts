@@ -631,7 +631,7 @@ export class BeeziSimple implements AfterViewInit {
   }
 
   private initializeMap(): void {
-    (mapboxgl as any).accessToken = 'pk.eyJ1Ijoic2FoaXZhIiwiYSI6ImNtZzl3cXFwaDBpOG8ybHNneGFwZ3ZqOTUifQ.UrldzEHRjHkw2CiMeAyR-Q';
+  (mapboxgl as any).accessToken = window.__env__?.MAPBOX_TOKEN || '';
 
     this.map = new mapboxgl.Map({
       container: this.mapContainer.nativeElement,
