@@ -1,0 +1,7 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type": "Feature", "properties": {"name": "Colmena 1"}, "geometry": {"type": "Polygon", "coordinates": [[[-3.705,40.415],[-3.705,40.418],[-3.701,40.418],[-3.701,40.415],[-3.705,40.415]]]}},
+    {"type": "Feature", "properties": {"name": "Colmena 2"}, "geometry": {"type": "Polygon", "coordinates": [[[-3.707,40.419],[-3.707,40.421],[-3.703,40.421],[-3.703,40.419],[-3.707,40.419]]]}}
+  ]
+}

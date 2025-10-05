@@ -1,0 +1,8 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type": "Feature", "properties": {"ndvi": 0.85, "date": "2025-04-01"}, "geometry": {"type": "Point", "coordinates": [-3.7038, 40.4168]}},
+    {"type": "Feature", "properties": {"ndvi": 0.78, "date": "2025-05-01"}, "geometry": {"type": "Point", "coordinates": [-3.703, 40.417]}},
+    {"type": "Feature", "properties": {"ndvi": 0.92, "date": "2025-06-01"}, "geometry": {"type": "Point", "coordinates": [-3.704, 40.418]}}
+  ]
+}
