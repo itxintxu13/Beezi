@@ -5,7 +5,8 @@
     "start": "ng serve --proxy-config proxy.conf.json",
     "start:mock": "node server/mock-backend.js",
     "dev": "concurrently \"npm run start:mock\" \"npm run start\"",
-    "build": "ng build",
+  "build": "ng build",
+  "vercel-build": "ng build --configuration production",
     "test": "ng test"
   },
   "prettier": {

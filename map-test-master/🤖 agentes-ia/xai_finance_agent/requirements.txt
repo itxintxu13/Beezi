@@ -1,5 +1,0 @@
-phidata
-duckduckgo-search
-yfinance
-fastapi[standard] 
-openai

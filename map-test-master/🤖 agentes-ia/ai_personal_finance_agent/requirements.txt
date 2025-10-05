@@ -1,4 +1,0 @@
-streamlit 
-phidata
-openai
-google-search-results
