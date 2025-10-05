@@ -1,0 +1,125 @@
+<!-- Beezi Demo - Satellite System for Pollinator Protection -->
+<div class="beezi-container">
+  <!-- Header con branding -->
+
+  <div class="beezi-header">
+    <div class="logo-section">
+      <h1>🌍🐝 Beezi</h1>
+  <p class="tagline">Satellite System for Pollinator Protection</p>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+      <div class="city-search-bar">
+  <input type="text" [(ngModel)]="cityQuery" (keydown.enter)="goToCity()" placeholder="Search city (e.g. Bilbao, Madrid...)" />
+  <button (click)="goToCity()">Go</button>
+      </div>
+    </div>
+    <div class="status-indicator">
+      <div class="pulse-dot"></div>
+  <span>MONITORING ACTIVE</span>
+    </div>
+  </div>
+
+  <!-- Mapa principal -->
+  <div #mapContainer id="map" class="main-map"></div>
+
+  <!-- Floating information panel -->
+  <div class="info-panel" [class.collapsed]="panelCollapsed">
+    <div class="panel-header" (click)="togglePanel()" (keydown)="togglePanel()">
+      <h3>📊 Ecosystem Status</h3>
+      <button class="toggle-btn">{{ panelCollapsed ? '▲' : '▼' }}</button>
+    </div>
+    
+    <div class="panel-content" *ngIf="!panelCollapsed">
+      <div class="metric-card">
+        <div class="metric-icon">🌺</div>
+        <div class="metric-info">
+          <span class="metric-value">{{ bloomingData.length }}</span>
+          <span class="metric-label">Blooming Areas</span>
+        </div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-icon">🐝</div>
+        <div class="metric-info">
+          <span class="metric-value">{{ getTotalPollinators() }}</span>
+          <span class="metric-label">Active Pollinators</span>
+        </div>
+      </div>
+      
+      <div class="metric-card" [class.warning]="getRiskZones() > 0">
+        <div class="metric-icon">⚠️</div>
+        <div class="metric-info">
+          <span class="metric-value">{{ getRiskZones() }}</span>
+          <span class="metric-label">Zonas de Riesgo</span>
+        </div>
+      </div>
+
+      <div class="predictions-section">
+        <h4>🔮 Predicciones IA</h4>
+        <div class="prediction-item">
+          <span class="prediction-icon">🌸</span>
+          <span>Peak Blooming in Castilla-La Mancha</span>
+        </div>
+        <div class="prediction-item">
+          <span class="prediction-icon">⚡</span>
+          <span>Mass migration detected in the north</span>
+        </div>
+        <div class="prediction-item warning">
+          <span class="prediction-icon">🚨</span>
+          <span>Shortage expected in Castilla-La Mancha</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls flotantes -->
+  <div class="floating-controls">
+    <button class="control-btn" (click)="toggleAnimation()" [class.active]="isAnimating">
+      <span class="btn-icon">{{ isAnimating ? '⏸️' : '▶️' }}</span>
+      <span class="btn-label">{{ isAnimating ? 'Pausar' : 'Reproducir' }}</span>
+    </button>
+    
+    <button class="control-btn" (click)="showTimelapseView()">
+      <span class="btn-icon">⏱️</span>
+      <span class="btn-label">Timelapse</span>
+    </button>
+    
+    <button class="control-btn emergency" (click)="triggerEmergencyProtocol()">
+      <span class="btn-icon">🚨</span>
+      <span class="btn-label">Emergency</span>
+    </button>
+  </div>
+
+  <!-- Leyenda -->
+  <div class="legend">
+    <h4>🗺️ Leyenda</h4>
+    <div class="legend-item">
+      <div class="legend-color high-bloom"></div>
+      <span>High bloom (>70%)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color medium-bloom"></div>
+      <span>Medium bloom (40-70%)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color low-bloom"></div>
+      <span>Low bloom (<40%)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line pollinator-route"></div>
+      <span>Pollinator routes</span>
+    </div>
+  </div>
+
+  <!-- Overlay de carga inicial -->
+  <div class="loading-overlay" [class.hidden]="!isLoading">
+    <div class="loading-content">
+      <div class="bee-animation">🐝</div>
+      <h2>Initializing...</h2>
+      <p>Loading satellite data and calculating pollination routes</p>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="loadingProgress"></div>
+      </div>
+    </div>
+  </div>
+</div>
