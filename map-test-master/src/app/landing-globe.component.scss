@@ -39,9 +39,9 @@
 
 .landing-search-panel {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(24, 28, 48, 0.97);
+  top: 28px;
+  left: 28px;
+  background: linear-gradient(180deg, rgba(22,26,46,0.96), rgba(10,12,30,0.9));
   box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 0 0 1px #00fff022;
   border-radius: 14px 14px 18px 18px;
   padding: 22px 26px 20px 26px;
@@ -57,6 +57,33 @@
   backdrop-filter: blur(10px);
   transition: box-shadow 0.18s, transform 0.12s ease;
 }
+
+/* Map alert banner */
+.map-alert {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(90deg, rgba(255,75,66,0.95), rgba(255,125,100,0.95));
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  z-index: 500;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+.map-alert .map-alert-dismiss {
+  background: transparent;
+  border: none;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+}
+.map-alert.error { border: 1px solid rgba(255,255,255,0.08); }
 .landing-search-panel h1 {
   font-size: 2.2rem;
   font-weight: 800;
@@ -108,10 +135,10 @@
   width: 100%;
 }
 .landing-search-panel input {
-  padding: 16px 24px;
+  padding: 18px 24px;
   border-radius: 999px;
   border: none;
-  font-size: 1.12rem;
+  font-size: 1.18rem;
   flex: 1 1 auto;
   min-width: 0;
   outline: none;
@@ -123,7 +150,7 @@
   transition: box-shadow 0.18s, transform 0.12s;
 }
 .landing-search-panel input:focus {
-  box-shadow: 0 0 0 3px rgba(0,255,240,0.14), 0 6px 24px rgba(2,6,23,0.18);
+  background: linear-gradient(90deg,#00e6ff,#00ff88);
 }
 .landing-search-panel button {
   background: linear-gradient(90deg,#00d4ff,#00ff88);

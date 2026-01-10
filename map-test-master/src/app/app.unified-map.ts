@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import mapboxgl from 'mapbox-gl';
 import { MapCleanupService } from './core/map-cleanup.service';
@@ -12,6 +12,10 @@ import { TimelapseService } from './core/timelapse.service';
   imports: [FormsModule, CommonModule],
   template: `
     <div class="unified-map-container" style="display:flex;flex-direction:row;height:100vh;width:100vw;overflow:hidden;">
+      <div *ngIf="mapError && showMapAlert" class="map-alert error" role="alert">
+        <div class="map-alert-content"><strong>Error:</strong>&nbsp;<span>{{ mapError }}</span></div>
+        <button class="map-alert-dismiss" (click)="showMapAlert=false">✕</button>
+      </div>
       <div style="flex:1;position:relative;height:100vh;min-width:0;">
        <div class="satellite-icon" *ngIf="!advancedMode">🛰️</div>
         <div #mapContainer class="mapbox-map"></div>
@@ -86,7 +90,7 @@ import { TimelapseService } from './core/timelapse.service';
   `,
   styleUrls: ['./landing-globe.component.scss']
 })
-export class UnifiedMapComponent implements AfterViewInit {
+export class UnifiedMapComponent implements AfterViewInit, OnDestroy {
   panels = { ecosystem: false, legend: false };
   panelStates = { ecosystem: { minimized: false }, legend: { minimized: false } };
   panelPositions = { ecosystem: { x: 20, y: 100 }, legend: { x: window.innerWidth - 420, y: 100 } };
@@ -162,6 +166,8 @@ export class UnifiedMapComponent implements AfterViewInit {
 
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
   map!: mapboxgl.Map;
+  mapError: string | null = null;
+  showMapAlert: boolean = true;
   query: string = '';
   advancedMode = false;
   currentRegion = '';
@@ -198,7 +204,21 @@ export class UnifiedMapComponent implements AfterViewInit {
   }
   
   ngAfterViewInit(): void {
-  (mapboxgl as any).accessToken = window.__env__?.MAPBOX_TOKEN || '';
+    // Ensure we have a token and WebGL support before creating the map
+    const token = window.__env__?.MAPBOX_TOKEN || '';
+    if (!token) {
+      this.mapError = 'No Mapbox token found. The map may not load correctly.';
+      console.error('No Mapbox token found! (UnifiedMapComponent)');
+      return;
+    }
+    (mapboxgl as any).accessToken = token;
+
+    if (typeof (mapboxgl as any).supported !== 'function' || !(mapboxgl as any).supported()) {
+      this.mapError = 'WebGL is not available in this browser; the map cannot render.';
+      console.error('Mapbox GL no está soportado en este navegador (WebGL no disponible).');
+      return;
+    }
+
     this.map = new mapboxgl.Map({
       container: this.mapContainer.nativeElement,
       style: 'mapbox://styles/mapbox/satellite-v9',
@@ -216,7 +236,53 @@ export class UnifiedMapComponent implements AfterViewInit {
       });
     });
 
+    this.map.on('error', (e) => {
+      console.error('Map error (UnifiedMapComponent):', e);
+      if (!this.mapError) this.mapError = 'An error occurred loading the map. Check console for details.';
+    });
+
+    // Log map errors to aid debugging if style/tiles return HTML or 401/403
+    this.map.on('error', (e) => {
+      console.error('Map error (UnifiedMapComponent):', e);
+    });
+
     this.simulateLoading();
+  }
+
+  ngOnDestroy(): void {
+    // Cancel any animation frames
+    try {
+      if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
+    } catch (e) {
+      /* ignore */
+    }
+
+    // Clear any timelapse timeouts
+    try {
+      for (const t of this.timelapseTimeouts) {
+        clearTimeout(t);
+      }
+      this.timelapseTimeouts = [];
+    } catch (e) {
+      /* ignore */
+    }
+
+    // Remove map instance to free GL resources
+    try {
+      if (this.map) {
+        this.map.remove();
+      }
+    } catch (e) {
+      console.debug('Error removing map on destroy', e);
+    }
+
+    // Remove any global mouse listeners in case a drag was in progress
+    try {
+      document.removeEventListener('mousemove', this.onMouseMove.bind(this));
+      document.removeEventListener('mouseup', this.onMouseUp.bind(this));
+    } catch (e) {
+      /* ignore */
+    }
   }
   loadingProgress: number = 0;
 
@@ -250,25 +316,69 @@ export class UnifiedMapComponent implements AfterViewInit {
   const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(region)}.json?access_token=${encodeURIComponent(token)}`);
       const data = await resp.json();
       if (data.features && data.features.length > 0) {
-        coords = data.features[0].center;
+        const feature = data.features[0];
+        coords = feature.center;
+
+        // If bbox is provided, fit bounds to show whole area appropriately
+        if (feature.bbox && feature.bbox.length === 4) {
+          const bbox: [number, number, number, number] = feature.bbox;
+          try {
+            // Allow a closer max zoom when fitting bounds
+            this.map.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], { padding: 80, maxZoom: 12, duration: 1200 });
+            this.currentRegion = region;
+            this.regionStatus = 'Active monitoring - Optimal status';
+            // invoke advanced mode after animation
+            setTimeout(() => {
+              this.advancedMode = true;
+              this.addBloomingHotspots();
+              this.addPollinatorRoutes();
+              this.startAnimations();
+              this.addRoutes();
+              this.setupBeeRoutes();
+              this.startBeeAnimation();
+            }, 1400);
+            return;
+          } catch (e) {
+            console.debug('fitBounds error', e);
+          }
+        } else {
+          // Use place type to pick a sensible zoom level; increase slightly for closer view
+          const placeType = (feature.place_type && feature.place_type[0]) || '';
+          const zoomByType: Record<string, number> = {
+            country: 7,
+            region: 8,
+            district: 9,
+            place: 12,
+            locality: 13,
+            neighborhood: 14
+          };
+          const targetZoom = zoomByType[placeType] ?? 8.5;
+          this.map.flyTo({ center: coords, zoom: targetZoom, speed: 1.2, curve: 1.8, essential: true, bearing: 20 + Math.random() * 40, pitch: 45 });
+          this.currentRegion = region;
+          this.regionStatus = 'Active monitoring - Optimal status';
+          setTimeout(() => {
+            this.advancedMode = true;
+            this.addBloomingHotspots();
+            this.addPollinatorRoutes();
+            this.startAnimations();
+            this.addRoutes();
+            this.setupBeeRoutes();
+            this.startBeeAnimation();
+          }, 1600);
+          return;
+        }
       }
     } catch {}
-  this.currentRegion = region;
-  this.regionStatus = 'Active monitoring - Optimal status';
-    // Animar el globo y luego activar modo avanzado
-    this.map.flyTo({
-      center: coords,
-      zoom: 6.5,
-      speed: 1.2,
-      curve: 1.8,
-      essential: true,
-      bearing: 20 + Math.random() * 40,
-      pitch: 45
-    });
+    // Fallback: generic flyTo if no bbox/feature
+    this.currentRegion = region;
+    this.regionStatus = 'Active monitoring - Optimal status';
+    try {
+      this.map.flyTo({ center: coords, zoom: 6.5, speed: 1.2, curve: 1.8, essential: true, bearing: 20 + Math.random() * 40, pitch: 45 });
+    } catch (e) {
+      console.debug('flyTo fallback error', e);
+    }
     setTimeout(() => {
       this.advancedMode = true;
-      
-      
       this.addBloomingHotspots();
       this.addPollinatorRoutes();
       this.startAnimations();

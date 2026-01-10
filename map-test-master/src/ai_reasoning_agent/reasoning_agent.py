@@ -14,6 +14,8 @@ reasoning_agent = Agent(
 task = "¿Cuántas 'r' hay en la palabra 'supercalifragilisticexpialidocious'?"
 
 console.rule("[bold green]Agente Regular[/bold green]")
-regular_agent.print_response(task, stream=True)
+from .utils import safe_print_response
+
+safe_print_response(regular_agent, task)
 console.rule("[bold yellow]Agente de Razonamiento[/bold yellow]")
-reasoning_agent.print_response(task, stream=True, show_full_reasoning=True)
+safe_print_response(reasoning_agent, task)
