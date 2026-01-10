@@ -44,3 +44,6 @@ Thumbs.db
 
 # Local env files (do not commit secrets)
 .env
+
+# Python cache directories
+__pycache__/
