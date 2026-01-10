@@ -12,6 +12,17 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+### Runtime environment (Mapbox)
+
+This app expects a runtime environment file at `public/assets/runtime-env.js` that defines `window.__env__.MAPBOX_TOKEN`. For local development you can create this file or use the included example. Do NOT commit production tokens to the repository.
+
+Example `public/assets/runtime-env.js`:
+
+```js
+window.__env__ = window.__env__ || {};
+window.__env__.MAPBOX_TOKEN = (typeof MAPBOX_TOKEN !== 'undefined') ? MAPBOX_TOKEN : 'pk.YOUR_MAPBOX_TOKEN_HERE';
+```
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
