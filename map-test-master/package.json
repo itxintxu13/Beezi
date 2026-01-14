@@ -4,9 +4,14 @@
   "scripts": {
     "start": "ng serve --proxy-config proxy.conf.json",
     "start:mock": "node server/mock-backend.js",
+    "start:mock:fixed": "cross-env PORT=8000 node server/mock-backend.js",
+    "viirs-fetch": "python server/fetchers/viirs_fetcher.py",
+    "test:integration": "node server/tests/integration.js",
+    "test:e2e:ui": "node server/tests/e2e_ui.js",
+    "ci:e2e": "cross-env CI=true FRONTEND_PORT=4310 npm run test:e2e:ui",
     "dev": "concurrently \"npm run start:mock\" \"npm run start\"",
-  "build": "ng build",
-  "vercel-build": "ng build --configuration production",
+    "build": "ng build",
+    "vercel-build": "ng build --configuration production",
     "test": "ng test"
   },
   "prettier": {
@@ -37,7 +42,7 @@
     "leaflet": "^1.9.4",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^3.15.0",
-    "maplibre-gl": "^5.8.0",
+    "maplibre-gl": "^5.15.0",
     "multer": "^2.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.8.1",
@@ -52,12 +57,16 @@
     "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^24.6.2",
     "concurrently": "^8.2.0",
+    "eventsource": "^4.1.0",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "node-fetch": "^2.7.0",
+    "puppeteer": "^24.35.0",
+    "cross-env": "^7.0.3",
     "typescript": "~5.9.2"
   },
   "overrides": {
